@@ -1,0 +1,23 @@
+{
+  "name": "jira-issues",
+  "version": "1.0.0",
+  "description": "fetch all issues and output summary of weekly velocity and status counts.",
+  "main": "index.js",
+  "author": "Alan Gordon",
+  "devDependencies": {
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "/Users/alan.gordon1/.nvm/versions/node/v18.18.2/bin/node ./create-weekly-stats.js"
+  },
+  "license": "Hippocratic-2.1",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "googleapis": "^108.0.0",
+    "server-destroy": "^1.0.1",
+    "open": "^8.0.0"
+  }
+}
