@@ -14,7 +14,7 @@ const updateIssuesTab = async (issues) => {
             'Created -> Prioritised', 'Prioritised -> In Progress', 'In Progress -> Merged', 'Merged -> Released',
             'In Review -> To Be Translated', 'To Be Translated -> Merged', 'Dev Cycle Time: Prioritised -> Merged',
             'Prod Cycle Time: Prioritised -> Released', 'Prod Lead Time: In Progress -> Released', 'Issue Lead Time: Created -> Released',
-            'Closed Date'
+            'Closed Date', 'Epic', 'Epic Name', 'Story Points', 'T-Shirt Size'
         ];
         const data = issues.map((issue) => [
             issue.issueKey, issue.created.substring(0, 10), issue.creator, issue.reporter, issue.assignee, issue.team, issue.status, issue.issueType,
@@ -22,13 +22,13 @@ const updateIssuesTab = async (issues) => {
             issue.cycleTime.timeUntilPrioritised, issue.cycleTime.timeUntilInProgress, issue.cycleTime.timeUntilMerged,
             issue.cycleTime.timeUntilReleased, issue.cycleTime.timeInReivew, issue.cycleTime.timeInTranslation,
             issue.cycleTime.devCycleTime, issue.cycleTime.prodCycleTime, issue.cycleTime.prodLeadTime, issue.cycleTime.issueLeadTime,
-            issue.closedDate.toString().substring(0, 10)
+            issue.closedDate.toString().substring(0, 10), issue.epic, issue.epicName, issue.storyPoints, issue.tShirtSize
         ]);
 
         const rows = [titleRow, headings, ...data];
         const result = await setSheetsDataPromise({
             spreadsheetId: sheetsConfig.weeklyStatsSpreadsheet,
-            range: 'Issues!A:V',
+            range: 'Issues!A:Y',
             valueInputOption: 'USER_ENTERED',
             resource: {
                 majorDimension: 'ROWS',

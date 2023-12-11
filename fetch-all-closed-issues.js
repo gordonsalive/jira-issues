@@ -109,6 +109,20 @@ import { startDate, teamFromAssignee } from './config.js';
 //     "HM_SOFIA",
 //     "Q4_2023"
 // ],
+// parent: {
+//     key: "CHO-2236",
+//     fields: {
+//         summary: "Stabilise Quality of Service"
+//     }
+// }
+// customfield_10418: 3,  //story points
+//
+// and this is t-shirt size
+// customfield_11000: {
+//     self: "https://ocadotech.atlassian.net/rest/api/3/customFieldOption/12529",
+//     value: "XS",
+//     id: "12529"
+// },
 
 // I want to end up with:
 // {
@@ -118,13 +132,36 @@ import { startDate, teamFromAssignee } from './config.js';
 //     status: results.issues[].fields['status'].name, // always Released for closed issues.
 //     assignee: results.issues[].fields['assignee'].emailAddress,
 //     issueType: results.issues[].fields['issuetype'].name,
-//     labels" results.issues[].fields['labels'][]
+//     labels: results.issues[].fields['labels'][],
+//     epic: fields.parent?.key,
+//     epicName: fields.parent?.fields?.summary,
+//     storyPoints: fields['customfield_10418'],
+//     tShirtSize: fields['customfield_11000'].value
 // }
 
 // It appears our instance will only return 100 results at a time! I'll need to look at maxResults and total in the results then call again passing in
 //   a new startAt.  There's a lot of waste in the returned data, so rather than holding all that in memory, I can parse each chunk in a loop
 //   concatenating my processed results after each loop.  I could spawn these off as promises, but actually I'd like my machine to have a
 //   chance to process each chunk, rather than running out of memory!
+
+const convertTShirtSizeToStoryPoints = (tShirtSize) => {
+    switch (tShirtSize) {
+        case 'XS':
+            return 1;
+        case 'S':
+            return 2;
+        case 'M':
+            return 5;
+        case 'L':
+            return 8;
+        case 'XL':
+            return 13;
+        case 'XXL':
+            return 21;
+        default:
+            return undefined; // we don't have a t-shirt size so leave the field undefined.
+    }
+}
 
 // The data from before 2/7/2023 has status changes showing it resolved on 29/6/2023, so not useful for calculating states in future.
 const issuesPromise = (fetchStartAt = 0) => fetch(
@@ -155,16 +192,21 @@ const issuesPromise = (fetchStartAt = 0) => fetch(
     .then(({
         releasedIssues, startAt, maxResults, total
     }) => ({
-        issues: releasedIssues.map((issue) => ({
-            issueKey: issue.key,
-            created: issue.fields.created,
-            creator: issue.fields.creator.emailAddress,
-            reporter: issue.fields?.reporter?.emailAddress,
-            assignee: issue.fields?.assignee?.emailAddress,
-            team: teamFromAssignee((issue.fields?.assignee) ? issue.fields?.assignee?.emailAddress : issue.fields.creator.emailAddress),
-            status: issue.fields.status.name,
-            issueType: issue.fields.issuetype.name,
-            labels: issue.fields?.labels
+        issues: releasedIssues.map(({ key, fields }) => ({
+            issueKey: key,
+            created: fields.created,
+            creator: fields.creator?.emailAddress,
+            reporter: fields.reporter?.emailAddress,
+            assignee: fields.assignee?.emailAddress,
+            team: teamFromAssignee((fields.assignee) ? fields.assignee?.emailAddress : fields.creator?.emailAddress),
+            status: fields.status?.name,
+            issueType: fields.issuetype?.name,
+            labels: fields.labels,
+            epic: fields.parent?.key,
+            epicName: fields.parent?.fields?.summary,
+            // if no story points, can we derive them from t-shirt size?
+            storyPoints: fields.customfield_10418 ? fields.customfield_10418 : convertTShirtSizeToStoryPoints(fields.customfield_11000?.value),
+            tShirtSize: fields.customfield_11000?.value
         })),
         startAt,
         maxResults,
