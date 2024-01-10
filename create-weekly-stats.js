@@ -29,6 +29,9 @@ const mainLoop = async () => {
         // cycle through the statsByWeek
         // (inside this cycle through the issuesWithStatusChanges and reduce into my final stats ==> another spreadsheet tab)
         weeklySummaryWithIssueStats[team] = addIssueStatsToWeeklySummary(statsByWeek[team], issuesWithStatusChangesAndCycleTimes, team);
+        // if (team === 'sofiaTeam') {
+        //     console.log(team, weeklySummaryWithIssueStats[team]);
+        // }
         // updload these results to a googlesheet
         await updateWeeklyStatsTab(weeklySummaryWithIssueStats[team], team);
         if (teamsLoop.length > 0) {

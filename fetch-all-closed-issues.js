@@ -123,6 +123,8 @@ import { startDate, teamFromAssignee } from './config.js';
 //     value: "XS",
 //     id: "12529"
 // },
+//
+// resolutiondate: "2023-12-15T11:17:57.236+0000",
 
 // I want to end up with:
 // {
@@ -146,22 +148,22 @@ import { startDate, teamFromAssignee } from './config.js';
 
 const convertTShirtSizeToStoryPoints = (tShirtSize) => {
     switch (tShirtSize) {
-        case 'XS':
-            return 1;
-        case 'S':
-            return 2;
-        case 'M':
-            return 5;
-        case 'L':
-            return 8;
-        case 'XL':
-            return 13;
-        case 'XXL':
-            return 21;
-        default:
-            return undefined; // we don't have a t-shirt size so leave the field undefined.
+    case 'XS':
+        return 1;
+    case 'S':
+        return 2;
+    case 'M':
+        return 5;
+    case 'L':
+        return 8;
+    case 'XL':
+        return 13;
+    case 'XXL':
+        return 21;
+    default:
+        return undefined; // we don't have a t-shirt size so leave the field undefined.
     }
-}
+};
 
 // The data from before 2/7/2023 has status changes showing it resolved on 29/6/2023, so not useful for calculating states in future.
 const issuesPromise = (fetchStartAt = 0) => fetch(
@@ -206,7 +208,8 @@ const issuesPromise = (fetchStartAt = 0) => fetch(
             epicName: fields.parent?.fields?.summary,
             // if no story points, can we derive them from t-shirt size?
             storyPoints: fields.customfield_10418 ? fields.customfield_10418 : convertTShirtSizeToStoryPoints(fields.customfield_11000?.value),
-            tShirtSize: fields.customfield_11000?.value
+            tShirtSize: fields.customfield_11000?.value,
+            resolutionDate: fields.resolutiondate
         })),
         startAt,
         maxResults,

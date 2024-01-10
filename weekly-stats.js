@@ -6,8 +6,8 @@ const millisInAWeek = millisInADay * 7;
 const createWeeklyStructure = () => {
     const newDateFromDate = (baseDate, delta) => {
         const OneDay = 86400000;
-        const result = new Date((Math.round(baseDate.valueOf() / OneDay) * OneDay));
-        result.setDate(baseDate.getDate() + delta);
+        const result = new Date((Math.floor(baseDate.valueOf() / OneDay) * OneDay));
+        result.setDate(result.getDate() + delta); // getDate & setDate are the day of month, 0 = last day of previous month and so on
         return result;
     };
     const lastSunday = newDateFromDate(new Date(), -((new Date()).getDay() % 7));
@@ -55,18 +55,28 @@ const addIssueStatsToWeeklySummary = (statsByWeek, issuesWithStatusChangesAndCyc
         return {
             week: week.week,
             closedIssues,
-            closedIssuesCount: closedIssuesCount || null,
-            averageTimeUntilPrioritised: cycleTimeTotals.totalTimeUntilPrioritised / closedIssuesCount,
-            averageTimeUntilInProgress: cycleTimeTotals.totalTimeUntilInProgress / closedIssuesCount,
-            averageTimeUntilMerged: cycleTimeTotals.totalTimeUntilMerged / closedIssuesCount,
-            averageTimeUntilReleased: cycleTimeTotals.totalTimeUntilReleased / closedIssuesCount,
-            averageTimeInReivew: cycleTimeTotals.totalTimeInReivew / closedIssuesCount,
-            averageTimeInTranslation: cycleTimeTotals.totalTimeInTranslation / translationIssuesCount,
-            averageDevCycleTime: cycleTimeTotals.totalDevCycleTime / closedIssuesCount,
-            averageProdCycleTime: cycleTimeTotals.totalProdCycleTime / closedIssuesCount,
-            averageProdLeadTime: cycleTimeTotals.totalProdLeadTime / closedIssuesCount,
-            averageIssueLeadTime: cycleTimeTotals.totalIssueLeadTime / closedIssuesCount,
-            translationIssuesCount: translationIssuesCount || null
+            closedIssuesCount,
+            totalTimeUntilPrioritised: cycleTimeTotals.totalTimeUntilPrioritised,
+            totalTimeUntilInProgress: cycleTimeTotals.totalTimeUntilInProgress,
+            totalTimeUntilMerged: cycleTimeTotals.totalTimeUntilMerged,
+            totalTimeUntilReleased: cycleTimeTotals.totalTimeUntilReleased,
+            totalTimeInReivew: cycleTimeTotals.totalTimeInReivew,
+            totalTimeInTranslation: cycleTimeTotals.totalTimeInTranslation,
+            totalDevCycleTime: cycleTimeTotals.totalDevCycleTime,
+            totalProdCycleTime: cycleTimeTotals.totalProdCycleTime,
+            totalProdLeadTime: cycleTimeTotals.totalProdLeadTime,
+            totalIssueLeadTime: cycleTimeTotals.totalIssueLeadTime,
+            translationIssuesCount,
+            averageTimeUntilPrioritised: closedIssuesCount ? cycleTimeTotals.totalTimeUntilPrioritised / closedIssuesCount : ' ',
+            averageTimeUntilInProgress: closedIssuesCount ? cycleTimeTotals.totalTimeUntilInProgress / closedIssuesCount : ' ',
+            averageTimeUntilMerged: closedIssuesCount ? cycleTimeTotals.totalTimeUntilMerged / closedIssuesCount : ' ',
+            averageTimeUntilReleased: closedIssuesCount ? cycleTimeTotals.totalTimeUntilReleased / closedIssuesCount : ' ',
+            averageTimeInReivew: closedIssuesCount ? cycleTimeTotals.totalTimeInReivew / closedIssuesCount : ' ',
+            averageTimeInTranslation: translationIssuesCount ? cycleTimeTotals.totalTimeInTranslation / translationIssuesCount : ' ',
+            averageDevCycleTime: closedIssuesCount ? cycleTimeTotals.totalDevCycleTime / closedIssuesCount : ' ',
+            averageProdCycleTime: closedIssuesCount ? cycleTimeTotals.totalProdCycleTime / closedIssuesCount : ' ',
+            averageProdLeadTime: closedIssuesCount ? cycleTimeTotals.totalProdLeadTime / closedIssuesCount : ' ',
+            averageIssueLeadTime: closedIssuesCount ? cycleTimeTotals.totalIssueLeadTime / closedIssuesCount : ' '
         };
     }
 );

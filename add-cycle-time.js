@@ -39,7 +39,8 @@ const addCycleTime = (issuesWithStatusChanges) => {
         if (fromStage && toStage) {
             const fromTime = new Date(fromStage.created);
             const toTime = new Date(toStage.created);
-            const durationMillis = toTime - fromTime;
+            const delta = toTime - fromTime;
+            const durationMillis = (delta > 0) ? delta : 0; // if stories move through states out of order record zero for that transition
             const durationDays = durationMillis / millisInADay;
             return durationDays;
         }
@@ -53,6 +54,31 @@ const addCycleTime = (issuesWithStatusChanges) => {
         const durationMillis = toTime - fromTime;
         const durationDays = durationMillis / millisInADay;
         return durationDays;
+    };
+
+    const weekCommencingDateFromDate = (dateAsString) => {
+        // truncate the time off the date
+        const startDate = new Date(Date.parse(dateAsString));
+        const result = new Date((Math.floor(startDate.valueOf() / millisInADay) * millisInADay));
+        // get the day of week (Sunday = 0)
+        const day = result.getDay();
+        // I want to take away enough days to get to the Monday this week starts with
+        const delta = (day) ? day - 1 : 6;
+        result.setDate(result.getDate() - delta); // getDate & setDate are the day of month, 0 = last day of previous month and so on
+        return result;
+    };
+
+    const monthCommencingDateFromDate = (dateAsString) => {
+        // truncate the time off the date
+        const startDate = new Date(Date.parse(dateAsString));
+        const result = new Date((Math.floor(startDate.valueOf() / millisInADay) * millisInADay));
+        // get the day of the month
+        const day = result.getDate();
+        // I want to take away enough days to get to the first day of this month
+        const delta = day - 1;
+        result.setDate(result.getDate() - delta); // getDate & setDate are the day of month, 0 = last day of previous month and so on
+        console.log(startDate, result, day, delta);
+        return result;
     };
 
     // cycleTime item for each issue:
@@ -83,7 +109,9 @@ const addCycleTime = (issuesWithStatusChanges) => {
             prodLeadTime: calculateDuration(issue.statusChanges, 'In Progress', 'Released'),
             issueLeadTime: calculateProposedTimeUntil(issue, issue.statusChanges.length - 1)
         },
-        closedDate: new Date(issue.statusChanges.findLast((change) => change.toString === 'Released')?.created)
+        closedDate: new Date(issue.statusChanges.findLast((change) => change.toString === 'Released')?.created || issue.resolutionDate),
+        weekCommencing: weekCommencingDateFromDate(issue.resolutionDate),
+        monthCommencing: monthCommencingDateFromDate(issue.resolutionDate)
     }));
 
     return issuesWithStatusChangesAndCycleTimes;
