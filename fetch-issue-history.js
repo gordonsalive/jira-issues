@@ -51,7 +51,11 @@ const issueHistoryPromise = (issueKey) => fetch(
     {
         method: 'GET',
         headers: {
-            Authorization: AUTH_STRING,
+            // this is the API token from jira - can't see it once it has been created so if you lose it you'll need to create a new one <jiraAPItoken>
+            // next I need to encode this in base64! with my email, e.g.:  echo -n user@example.com:api_token_string | base64
+            // which give this <base64version>
+            // and the AUTH_STRING is "Basic <base64version>"
+            Authorization: AUTH_STRING, 
             Accept: 'application/json'
         }
     }

@@ -11,7 +11,7 @@
   },
   "type": "module",
   "scripts": {
-    "start": "/Users/alan.gordon1/.nvm/versions/node/v18.18.2/bin/node ./create-weekly-stats.js"
+    "start": "/Users/alan.gordon1/.nvm/versions/node/v20.14.0/bin/node ./create-weekly-stats.js"
   },
   "license": "Hippocratic-2.1",
   "dependencies": {

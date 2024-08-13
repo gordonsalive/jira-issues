@@ -42,7 +42,8 @@ const updateIssuesTab = async (issues) => {
 };
 
 const updateWeeklyStatsTab = async (weeklyStats, team) => {
-    const teamNameOrAll = teams[team]?.name || 'ALL';
+    // const teamNameOrAll = teams[team]?.name || 'ALL';
+    const teamNameOrAll = team;
     console.log('about to call updateWeeklyStatsTab', teamNameOrAll);
     try {
         const titleRow = [`Completed issues, count and average transition/cycletimes for weeks since 2/7/2023.  Transition/cycletime averages are in days. (last updated: ${(new Date()).toUTCString()})`];

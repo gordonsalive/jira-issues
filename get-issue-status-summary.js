@@ -26,7 +26,9 @@ const getIssuesWithStatusChanges = async () => {
         return [];
     };
 
+    console.log('about to call issuesPromise');
     const closedIssues = await issuesPromise();
+    console.log('back from call to issuesPromise');
 
     // Firing them all at one is too much for JIRA, so fire them sequentially
     // const issuesWithStatusChanges = await Promise.all(closedIssues.issues.map((issue) => issueWithStatusChanges(issue)));

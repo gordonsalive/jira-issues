@@ -7,6 +7,8 @@ import { startDate, teamFromAssignee } from './config.js';
 // const AUTH_STRING = `Basic ${Buffer.from('email@example.com:<api_token>').toString('base64')}`;
 // ORG_STRING = your-domain
 
+
+
 // The overall return is a list of issues:
 // {
 //     expand: "schema,names",
@@ -168,10 +170,15 @@ const convertTShirtSizeToStoryPoints = (tShirtSize) => {
 // The data from before 2/7/2023 has status changes showing it resolved on 29/6/2023, so not useful for calculating states in future.
 const issuesPromise = (fetchStartAt = 0) => fetch(
     `https://${ORG_STRING}.atlassian.net/rest/api/3/search?jql=project%20%3D%20CHO%20AND%20STATUS%20IN%20(Merged,%20Released)%20AND%20resolved>="${startDate}"&maxResults=3000&startAt=${fetchStartAt}`,
+    // `https://${ORG_STRING}.atlassian.net/rest/api/3/search?jql=project%20%3D%20CHO%20AND%20STATUS%20IN%20(Merged,%20Released)`,
     {
         method: 'GET',
         headers: {
-            Authorization: AUTH_STRING,
+            // this is the API token from jira - can't see it once it has been created so if you lose it you'll need to create a new one <jiraAPItoken>
+            // next I need to encode this in base64! with my email, e.g.:  echo -n user@example.com:api_token_string | base64
+            // which give this <base64version>
+            // and the AUTH_STRING is "Basic <base64version>"
+            Authorization: AUTH_STRING, // this is the API token from jira - can't see it once it has been created so if you lose it you'll need to create a new one
             Accept: 'application/json'
         }
     }
