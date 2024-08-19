@@ -77,7 +77,7 @@ const addCycleTime = (issuesWithStatusChanges) => {
         // I want to take away enough days to get to the first day of this month
         const delta = day - 1;
         result.setDate(result.getDate() - delta); // getDate & setDate are the day of month, 0 = last day of previous month and so on
-        console.log(startDate, result, day, delta);
+        // console.log(startDate, result, day, delta);
         return result;
     };
 

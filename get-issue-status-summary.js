@@ -30,7 +30,7 @@ const getIssuesWithStatusChanges = async () => {
     const closedIssues = await issuesPromise();
     console.log('back from call to issuesPromise');
 
-    // Firing them all at one is too much for JIRA, so fire them sequentially
+    // Firing them all at once is too much for JIRA, so fire them sequentially
     // const issuesWithStatusChanges = await Promise.all(closedIssues.issues.map((issue) => issueWithStatusChanges(issue)));
     return aggregateIssuesWithStatusChanges(closedIssues.issues);
 };

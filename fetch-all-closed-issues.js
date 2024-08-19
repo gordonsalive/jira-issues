@@ -157,10 +157,8 @@ const convertTShirtSizeToStoryPoints = (tShirtSize) => {
     case 'M':
         return 5;
     case 'L':
-        return 8;
-    case 'XL':
         return 13;
-    case 'XXL':
+    case 'XL', 'XXL':
         return 21;
     default:
         return undefined; // we don't have a t-shirt size so leave the field undefined.
@@ -184,9 +182,7 @@ const issuesPromise = (fetchStartAt = 0) => fetch(
     }
 )
     .then((response) => {
-        console.log(
-            `Response: ${response.status} ${response.statusText}, fetchStartAt: ${fetchStartAt}`
-        );
+        console.log(`Response: ${response.status} ${response.statusText}, fetchStartAt: ${fetchStartAt}`);
         return response.text();
     })
     .then((text) => JSON.parse(text))

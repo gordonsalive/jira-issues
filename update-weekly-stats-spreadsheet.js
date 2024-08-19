@@ -86,4 +86,60 @@ const updateWeeklyStatsTab = async (weeklyStats, team) => {
     }
 };
 
-export { updateIssuesTab, updateWeeklyStatsTab };
+const weekCommencing = (date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - d.getDay() + 1);
+    return d.toISOString().substring(0, 10);
+}
+
+const monthCommencing = (date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(1);
+    return d.toISOString().substring(0, 10);
+}
+
+const trimDate = (date) => {
+    const d = new Date(date);
+    return d.toISOString().substring(0, 10);
+}
+
+const updateReviewsTab = async (reviews) => {
+    console.log(`updating Reviews tab in Team Weekly Stats spreadsheet ${(new Date()).toUTCString()}`);
+
+    try {
+        const titleRow = [`Reviews and notes (comments) from gitlab.  (last updated: ${(new Date()).toUTCString()})`];
+        // headings all from review
+        const headings = [
+            'Date', 'Reviewer', 'Repo', 'Week Commencing', 'Month Commencing', 'Approval Count', 'Note Count'
+        ];
+
+        const data = Object.keys(reviews).map((date) => {
+            return Object.keys(reviews[date]).map((reviewer) => {
+                return Object.keys(reviews[date][reviewer]).map((repo) => {
+                    return [
+                        trimDate(date), reviewer, repo, weekCommencing(date), monthCommencing(date),
+                        reviews[date][reviewer][repo].approval?.length || 0, reviews[date][reviewer][repo].note?.length || 0
+                    ];
+                })
+            }).flat();
+        }).flat();
+
+        const rows = [titleRow, headings, ...data];
+        const result = await setSheetsDataPromise({
+            spreadsheetId: sheetsConfig.weeklyStatsSpreadsheet,
+            range: 'Reviews!A:G',
+            valueInputOption: 'USER_ENTERED',
+            resource: {
+                majorDimension: 'ROWS',
+                values: rows
+            },
+        });
+        console.log(`Rows updated: ${result}`);
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+};
+
+export { updateIssuesTab, updateWeeklyStatsTab, updateReviewsTab };

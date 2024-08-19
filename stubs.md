@@ -11,6 +11,15 @@ These stubs can be used to replace the missing files.
 const AUTH_STRING = "";
 const ORG_STRING = "";// take a look at the URL when accessing jira
 
+const GITLAB_ORG_STRING = ""; // the server url, i.e. first part, of URL of repo
+const repos = {
+    'repo1': {id: nnnn, name: 'repo1', projectAccessToken: 'glot-asdkj983hkd'},
+    'repo2': {id: nnnnn, name: 'repo2', projectAccessToken: 'glot-asdkj983hke'},
+};
+const filteredTeamUsername = '<team>.gl';
+const filteredAuthors = ['<> Gl', 'Renovate'];
+
+
 export { AUTH_STRING, ORG_STRING }
 ```
 
