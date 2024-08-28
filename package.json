@@ -16,7 +16,7 @@
   "license": "Hippocratic-2.1",
   "dependencies": {
     "node-fetch": "^3.3.2",
-    "googleapis": "^108.0.0",
+    "googleapis": "^143.0.0",
     "server-destroy": "^1.0.1",
     "open": "^8.0.0"
   }
